@@ -1,0 +1,29 @@
+<!--
+================================================================================
+  [GitHub Pages에 무료 배포하는 방법 (중요! 빌드본 업로드)]
+  1. https://github.com 에 접속하여 로그인 후 'New repository'를 생성합니다.
+  2. Repository name을 입력하고 'Public' 선택 후 [Create repository] 클릭!
+  3. 프로젝트 빌드 명령어 (`npm run build`) 실행 후 생성되는 `dist` 폴더 내부의
+     `index.html` 및 `assets` 폴더 내용물을 GitHub 저장소에 업로드합니다.
+     (주의: .tsx 소스 파일 그대로 올리면 브라우저가 MIME 타입 오류를 발생시킵니다!)
+  4. 저장소 상단 [Settings] -> [Pages] -> Branch를 'main' / '/ (root)' 로 지정 후 [Save]!
+  5. 1~2분 뒤 생성되는 GitHub Pages 링크로 언제 어디서나 사용할 수 있습니다! ✨
+================================================================================
+-->
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>교사 월급 관리 & AI 투자 튜터 🐰🪙</title>
+    <!-- Google Cute Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#FFFDF9] text-slate-800 antialiased font-['Gowun_Dodum',sans-serif] selection:bg-pink-200 selection:text-pink-900">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

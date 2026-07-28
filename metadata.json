@@ -1,0 +1,6 @@
+{
+  "name": "교사 월급 관리 & AI 투자 튜터",
+  "description": "교사의 기본급, 수당, 공제 항목을 자동 계산하고 명세서 AI OCR 인식 및 귀여운 AI 튜터 마스코트의 맞춤형 자산 관리 가이드를 제공합니다.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

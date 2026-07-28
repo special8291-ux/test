@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap');
+
+:root {
+  --bg: #fffdf5;
+  --pink: #ffd1dc;
+  --mint: #e0f2f1;
+  --yellow: #fff9c4;
+  --brown: #5d4037;
+  --white: #ffffff;
+  --soft-shadow: 0 10px 25px -5px rgba(93, 64, 55, 0.08), 0 8px 10px -6px rgba(93, 64, 55, 0.08);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--brown);
+  font-family: 'Gowun Dodum', system-ui, sans-serif;
+}
+
+h1, h2, h3, .font-jua {
+  font-family: 'Jua', sans-serif;
+}
+
+/* Organic Pudding Button Effect */
+.pudding-btn {
+  background-color: var(--pink);
+  color: var(--brown);
+  border: none;
+  border-radius: 20px;
+  padding: 12px 20px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #e6b8c4;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pudding-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #e6b8c4;
+}
+
+.pudding-btn-mint {
+  background-color: var(--mint);
+  color: var(--brown);
+  box-shadow: 0 4px 0 #b2d8d5;
+}
+
+.pudding-btn-mint:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #b2d8d5;
+}
+
+.pudding-btn-yellow {
+  background-color: var(--yellow);
+  color: var(--brown);
+  box-shadow: 0 4px 0 #f0e68c;
+}
+
+.pudding-btn-yellow:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #f0e68c;
+}
+
+.pudding-btn-brown {
+  background-color: var(--brown);
+  color: #ffffff;
+  box-shadow: 0 4px 0 #3e2723;
+}
+
+.pudding-btn-brown:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #3e2723;
+}
+
+/* Warm organic card */
+.organic-card {
+  background: var(--white);
+  border-radius: 28px;
+  box-shadow: var(--soft-shadow);
+  border: 1.5px solid rgba(93, 64, 55, 0.08);
+}
+
+/* Organic dashed highlight box */
+.dashed-highlight-box {
+  border: 2px dashed var(--pink);
+  background: rgba(255, 209, 220, 0.25);
+  border-radius: 24px;
+}
+
+/* Speech bubble tail */
+.speech-bubble {
+  background: var(--white);
+  padding: 16px 20px;
+  border-radius: 24px;
+  position: relative;
+  border: 1px solid rgba(93, 64, 55, 0.08);
+  box-shadow: 0 4px 12px rgba(93, 64, 55, 0.05);
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid var(--white);
+  transform: translateY(-50%);
+}
+
+@media (max-width: 640px) {
+  .speech-bubble::after {
+    left: 50%;
+    top: -10px;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-bottom: 10px solid var(--white);
+    transform: translateX(-50%);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #fbf7ef;
+}
+::-webkit-scrollbar-thumb {
+  background: #e0d0c0;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cbb8a5;
+}
