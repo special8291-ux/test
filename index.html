@@ -1,29 +1,164 @@
-<!--
-================================================================================
-  [GitHub Pages에 무료 배포하는 방법 (중요! 빌드본 업로드)]
-  1. https://github.com 에 접속하여 로그인 후 'New repository'를 생성합니다.
-  2. Repository name을 입력하고 'Public' 선택 후 [Create repository] 클릭!
-  3. 프로젝트 빌드 명령어 (`npm run build`) 실행 후 생성되는 `dist` 폴더 내부의
-     `index.html` 및 `assets` 폴더 내용물을 GitHub 저장소에 업로드합니다.
-     (주의: .tsx 소스 파일 그대로 올리면 브라우저가 MIME 타입 오류를 발생시킵니다!)
-  4. 저장소 상단 [Settings] -> [Pages] -> Branch를 'main' / '/ (root)' 로 지정 후 [Save]!
-  5. 1~2분 뒤 생성되는 GitHub Pages 링크로 언제 어디서나 사용할 수 있습니다! ✨
-================================================================================
--->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>교사 월급 관리 & AI 투자 튜터 🐰🪙</title>
-    <!-- Google Cute Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
-  </head>
-  <body class="bg-[#FFFDF9] text-slate-800 antialiased font-['Gowun_Dodum',sans-serif] selection:bg-pink-200 selection:text-pink-900">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>대한민국 교원 월급 & 수당 AI 튜터</title>
+  <!-- React & Babel CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google GenAI SDK -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@google/genai": "https://esm.run/@google/genai"
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Gowun Dodum', sans-serif; }
+  </style>
+</head>
+<body class="bg-[#FFFDF9] text-slate-800 min-h-screen">
+  <div id="root"></div>
 
+  <script type="text/babel" data-type="module">
+    import { GoogleGenAI, Type } from "@google/genai";
+
+    function App() {
+      const [apiKey, setApiKey] = React.useState(localStorage.getItem("GEMINI_API_KEY") || "");
+      const [showKeyInput, setShowKeyInput] = React.useState(false);
+      const [step, setStep] = React.useState(15); // 호봉
+      const [grade, setGrade] = React.useState("elementary"); // 학교급
+      const [hasClass, setHasClass] = React.useState(true); // 담임 여부
+      const [headDept, setHeadDept] = React.useState(false); // 보직 여부
+
+      // 기본급 산출 (예시 기준)
+      const baseSalary = 2100000 + (step * 55000);
+      const classAllowance = hasClass ? 200000 : 0;
+      const deptAllowance = headDept ? 150000 : 0;
+      const mealAllowance = 150000;
+      const totalGross = baseSalary + classAllowance + deptAllowance + mealAllowance;
+      const totalDeduction = Math.round(totalGross * 0.17); // 추정 공제
+      const netPay = totalGross - totalDeduction;
+
+      const saveApiKey = (key) => {
+        setApiKey(key);
+        localStorage.setItem("GEMINI_API_KEY", key);
+        setShowKeyInput(false);
+        alert("Gemini API 키가 저장되었습니다!");
+      };
+
+      return (
+        <div class="max-w-4xl mx-auto p-4 sm:p-6">
+          {/* 헤더 */}
+          <header class="flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border border-orange-100 mb-6">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl">🏫</span>
+              <div>
+                <h1 class="text-xl font-bold text-slate-800">교원 월급 & 수당 AI 튜터</h1>
+                <p class="text-xs text-slate-500">선생님을 위한 맞춤형 월급 계산기</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setShowKeyInput(!showKeyInput)}
+              class="px-4 py-2 text-xs font-semibold rounded-xl bg-orange-100 text-orange-800 hover:bg-orange-200 transition"
+            >
+              🔑 {apiKey ? "API 키 설정 완료" : "API 키 입력"}
+            </button>
+          </header>
+
+          {/* API 키 입력 창 */}
+          {showKeyInput && (
+            <div class="bg-orange-50 border border-orange-200 p-4 rounded-2xl mb-6">
+              <h3 class="font-bold text-sm text-orange-900 mb-2">Gemini API 키 설정</h3>
+              <p class="text-xs text-orange-700 mb-3">Google AI Studio(aistudio.google.com)에서 무료로 발급받은 API 키를 입력해 주세요.</p>
+              <div class="flex gap-2">
+                <input 
+                  type="password" 
+                  value={apiKey} 
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="AIzaSy..." 
+                  class="flex-1 px-3 py-2 text-sm border rounded-xl bg-white"
+                />
+                <button 
+                  onClick={() => saveApiKey(apiKey)}
+                  class="px-4 py-2 bg-orange-500 text-white font-bold rounded-xl text-sm"
+                >
+                  저장
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* 메인 계산기 카드 */}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+              <h2 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                ✏️ 내 정보 입력
+              </h2>
+              
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">현재 호봉: {step}호봉</label>
+                <input 
+                  type="range" min="1" max="40" value={step} 
+                  onChange={(e) => setStep(Number(e.target.value))}
+                  class="w-full accent-orange-500"
+                />
+              </div>
+
+              <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                <span class="text-sm font-semibold text-slate-700">담임 교사 수당 (20만원)</span>
+                <input 
+                  type="checkbox" checked={hasClass} 
+                  onChange={(e) => setHasClass(e.target.checked)}
+                  class="w-5 h-5 accent-orange-500"
+                />
+              </div>
+
+              <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                <span class="text-sm font-semibold text-slate-700">보직(부장) 교사 수당 (15만원)</span>
+                <input 
+                  type="checkbox" checked={headDept} 
+                  onChange={(e) => setHeadDept(e.target.checked)}
+                  class="w-5 h-5 accent-orange-500"
+                />
+              </div>
+            </div>
+
+            {/* 결과 출력 */}
+            <div class="bg-orange-500 text-white p-6 rounded-2xl shadow-md flex flex-col justify-between">
+              <div>
+                <span class="text-xs bg-orange-400 px-3 py-1 rounded-full text-orange-900 font-bold">월급 추정액</span>
+                <h3 class="text-3xl font-black mt-4">{netPay.toLocaleString()} 원</h3>
+                <p class="text-xs opacity-90 mt-1">예상 실수령액 (지급 총액 약 {totalGross.toLocaleString()}원)</p>
+              </div>
+
+              <div class="mt-6 pt-4 border-t border-orange-400 space-y-2 text-xs">
+                <div class="flex justify-between">
+                  <span>호봉 기본급</span>
+                  <span class="font-bold">{baseSalary.toLocaleString()}원</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>교직수당 가산금(담임/보직)</span>
+                  <span class="font-bold">{(classAllowance + deptAllowance).toLocaleString()}원</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>정액급식비</span>
+                  <span class="font-bold">{mealAllowance.toLocaleString()}원</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
